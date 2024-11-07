@@ -7,54 +7,84 @@
   <style>
     body {
       text-align: center;
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #2c3e50;
+      background-color: #fff; /* 设置页面背景为白色 */
+      color: #333; /* 设置文字颜色为深灰 */
     }
 
     /* 背景图片设置 */
     #background-image {
       width: 100%;
-      max-height: 75vh; /* 限制最大高度为屏幕的 75% */
-      object-fit: contain;
+      height: 60vh;  /* 调整背景图片的高度为60%视口高度，保持适当的显示比例 */
+      object-fit: contain;  /* 确保图片完整显示 */
+      object-position: center;  /* 确保图片居中显示 */
       margin-top: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
 
     /* 进度文字 */
     #line1 {
-      font-size: 20px;
+      font-size: 24px;
       margin-top: 20px;
       color: #fff;
       font-weight: bold;
       opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      background-color: #7fc481;  /* 修改为绿色背景 */
+      padding: 10px 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      max-width: 90%;
+      margin: 0 auto;
     }
 
     /* 按钮容器 */
     #user-options {
       margin-top: 20px;
+      background-color: #79bbf2;  /* 修改为蓝色背景 */
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 
     /* 按钮样式 */
     button {
-      padding: 10px 20px;
+      padding: 12px 25px;
       font-size: 18px;
       cursor: pointer;
-      margin: 10px;
-      border-radius: 5px;
+      margin: 15px;
+      border-radius: 10px;
       background-color: #ff9800;
       color: white;
       border: none;
+      transition: background-color 0.3s, transform 0.3s;
     }
 
     button:hover {
       background-color: #e68900;
+      transform: translateY(-3px);
+    }
+
+    button:active {
+      transform: translateY(1px);
     }
 
     /* 页面布局 */
     .content {
       max-width: 1200px;
       margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;  /* 页面内的背景保持为白色 */
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 居中进度条和按钮 */
+    #line1, #user-options {
+      text-align: center;
     }
   </style>
 </head>
@@ -106,7 +136,7 @@
     function startTreasureHunt() {
       gameState = 'in-progress'; // 更新游戏状态
 
-      updateProgress('line1', "你正在开始寻找宝藏...");
+      updateProgress('line1', "开始寻找宝藏了吧！");
       updateBackground("images/background.jpg");  // 起始场景：藏宝图
       showUserOptions([{ label: "开始寻宝", action: goToLibrary }]);
       currentLocation = 'start';
@@ -122,16 +152,16 @@
 
     // 进入神秘洞窟
     function goToDongku() {
-      updateProgress('line1', "你进入了神秘洞窟，准备继续寻宝...");
-      showUserOptions([{ label: "查看传送门", action: showDoor }, { label: "进入神庙", action: goToTemple }]);
+      updateProgress('line1', "你进入了神秘洞窟，线索上说宝藏可能会在神庙，而且你发现了一个传送门，...");
+      showUserOptions([{ label: "进入传送门", action: showDoor }, { label: "进入神庙", action: goToTemple }]);
       currentLocation = 'dongku';
       updateBackground("images/dongku.jpg");
     }
 
     // 进入传送门
     function showDoor() {
-      updateProgress('line1', "你发现了一个传送门，准备穿越...");
-      showUserOptions([{ label: "返回藏宝图", action: goBackToMap },
+      updateProgress('line1', "你发现了一个传送门，准备穿越并选择了一个穿越的地点...");
+      showUserOptions([{ label: "返回起点", action: goBackToMap },
                         { label: "去神秘洞窟", action: goToDongku },
                         { label: "去图书馆", action: goToLibrary },
                         { label: "去神庙", action: goToTemple }]);
@@ -140,21 +170,21 @@
 
     // 进入神庙
     function goToTemple() {
-      updateProgress('line1', "你进入了神庙，但遭遇了神庙守卫...");
+      updateProgress('line1', "你进入了神庙...");
       showUserOptions([{ label: "查看线索", action: viewTempleClue }]);
       currentLocation = 'temple';
-      updateBackground("images/treasure-hunter.jpg"); // 神庙的守卫图片
+      updateBackground("images/temple.jpg"); // 神庙的内部图片
     }
 
     // 查看神庙线索
     function viewTempleClue() {
       const randomOutcome = Math.random();
       if (randomOutcome < 0.5) {
-        updateProgress('line1', "不好意思，寻宝失败，您可以刷新再次进行寻宝");
+        updateProgress('line1', "糟糕!遇到了神庙守卫!寻宝失败，您可以再次进行寻宝");
         showUserOptions([{ label: "重新开始", action: goBackToMap }]);
-        updateBackground("images/failed.jpg"); // 失败的背景图
+        updateBackground("images/treasure-hunter.png"); // 失败的背景图
       } else {
-        updateProgress('line1', "恭喜你找到宝藏！");
+        updateProgress('line1', "找到了一个神秘的箱子...");
         showUserOptions([{ label: "查看宝藏", action: showTreasure }]);
         updateBackground("images/final.jpg"); // 宝藏图片
       }
